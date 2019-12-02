@@ -14,7 +14,7 @@ var passportSocketIo = require('passport.socketio');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var questions = require('./routes/questions');
-var tour = require('./routes/tour');
+var tours = require('./routes/tours');
 
 var passportConfig = require('./lib/passport-config');
 
@@ -34,7 +34,8 @@ module.exports = (app, io) => {
   // mongodb connect
   //=======================================================
   mongoose.Promise = global.Promise; // ES6 Native Promise를 mongoose에서 사용한다.
-  const connStr = 'mongodb://localhost/mjdb4';
+  // const connStr = 'mongodb://localhost/mjdb4';
+  const connStr = 'mongodb://localhost:27017/web_class';
   // 아래는 mLab을 사용하는 경우의 예: 본인의 접속 String으로 바꾸세요.
   // const connStr = 'mongodb://dbuser1:mju12345@ds113825.mlab.com:13825/sampledb1';
   mongoose.connect(connStr, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
@@ -128,7 +129,7 @@ module.exports = (app, io) => {
   app.use('/', index);
   app.use('/users', users);
   app.use('/questions', questions(io)); // socket.io를 인자로 주기 위해 function으로 변경
-  app.use('/tour', tour(io));
+  app.use('/tours', tours(io));
   require('./routes/auth')(app, passport);
   app.use('/api', require('./routes/api'));
 
