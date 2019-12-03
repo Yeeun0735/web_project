@@ -43,8 +43,8 @@ function validateForm(form, options) {
 
 /* GET users listing. */
 router.get('/', needAuth, catchErrors(async (req, res, next) => {
-  const users = await User.find({});
-  res.render('guids/index', {users: users});
+  const guids = await Guid.find({});
+  res.render('guids/index', {guids: guids});
 }));
 
 router.get('/new', (req, res, next) => {
@@ -52,8 +52,8 @@ router.get('/new', (req, res, next) => {
 });
 
 router.get('/:id/edit', needAuth, catchErrors(async (req, res, next) => {
-  const user = await User.findById(req.params.id);
-  res.render('guid/edit', {user: user});
+  const guid = await User.findById(req.params.id);
+  res.render('guids/edit', {guid: guid});
 }));
 
 router.put('/:id', needAuth, catchErrors(async (req, res, next) => {
@@ -63,8 +63,8 @@ router.put('/:id', needAuth, catchErrors(async (req, res, next) => {
     return res.redirect('back');
   }
 
-  const user = await User.findById({_id: req.params.id});
-  if (!user) {
+  const guid = await Guid.findById({_id: req.params.id});
+  if (!guid) {
     req.flash('danger', 'Not exist user.');
     return res.redirect('back');
   }
@@ -74,25 +74,25 @@ router.put('/:id', needAuth, catchErrors(async (req, res, next) => {
     return res.redirect('back');
   }
 
-  user.name = req.body.name;
-  user.email = req.body.email;
+  guid.name = req.body.name;
+  guid.email = req.body.email;
   if (req.body.password) {
-    user.password = await user.generateHash(req.body.password);
+    guid.password = await user.generateHash(req.body.password);
   }
-  await user.save();
+  await guid.save();
   req.flash('success', 'Updated successfully.');
   res.redirect('/guids');
 }));
 
 router.delete('/:id', needAuth, catchErrors(async (req, res, next) => {
-  const user = await User.findOneAndRemove({_id: req.params.id});
+  const guid = await Guid.findOneAndRemove({_id: req.params.id});
   req.flash('success', 'Deleted Successfully.');
   res.redirect('/guids');
 }));
 
 router.get('/:id', catchErrors(async (req, res, next) => {
-  const user = await User.findById(req.params.id);
-  res.render('guids/show', {user: user});
+  const guid = await Guid.findById(req.params.id);
+  res.render('guids/show', {guid: guid});
 }));
 
 router.post('/', catchErrors(async (req, res, next) => {
@@ -101,18 +101,18 @@ router.post('/', catchErrors(async (req, res, next) => {
     req.flash('danger', err);
     return res.redirect('back');
   }
-  var user = await User.findOne({email: req.body.email});
-  console.log('USER???', user);
-  if (user) {
+  var guid = await Guid.findOne({email: req.body.email});
+  console.log('USER???', guid);
+  if (guid) {
     req.flash('danger', 'Email address already exists.');
     return res.redirect('back');
   }
-  user = new User({
+  guid = new Guid({
     name: req.body.name,
     email: req.body.email,
   });
-  user.password = await user.generateHash(req.body.password);
-  await user.save();
+  guid.password = await user.generateHash(req.body.password);
+  await guid.save();
   req.flash('success', 'Registered successfully. Please sign in.');
   res.redirect('/');
 }));

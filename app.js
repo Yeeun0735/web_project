@@ -126,10 +126,23 @@ module.exports = (app, io) => {
     }
   });
 
+  // io.on('connection', socket => {
+  //   console.log('socket connection!');
+  //   if (socket.request.guid.logged_in) {
+  //     // 로그인이 된 경우에만 join 요청을 받는다.
+  //     socket.emit('welcome');
+  //     socket.on('join', data => {
+  //       // 본인의 ID에 해당하는 채널에 가입시킨다.
+  //       socket.join(socket.request.guid._id.toString());
+  //     });
+  //   }
+  // });
+
+
   // Route
   app.use('/', index);
   app.use('/users', users);
-  app.use('/guids', users);
+  app.use('/guids', guids);
   app.use('/questions', questions(io)); // socket.io를 인자로 주기 위해 function으로 변경
   app.use('/tours', tours(io));
   require('./routes/auth')(app, passport);
