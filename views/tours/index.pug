@@ -20,7 +20,10 @@ block content
         each tour in tours.docs
           .tour
             a.title(href=`/tours/${tour.id}`)= tour.title
+            a.price(href=`/tours/${tour.id}`)= tour.price
             include _tour
+            
+            
 
       +paginate(tours, '/tours', query)
 
