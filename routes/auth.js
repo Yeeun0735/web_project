@@ -8,6 +8,12 @@ module.exports = (app, passport) => {
     failureRedirect : '/signin', // redirect back to the signup page if there is an error
     failureFlash : true // allow flash messages
   }));
+  
+  app.post('/signin', passport.authenticate('guid-signin', {
+    successRedirect : '/questions',  // redirect to the secure profile section
+    failureRedirect : '/signin', // redirect back to the signup page if there is an error
+    failureFlash : true // allow flash messages
+  }));
 
   app.get('/auth/facebook',
     passport.authenticate('facebook', { scope : 'email' })
