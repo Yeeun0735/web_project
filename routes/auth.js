@@ -9,9 +9,13 @@ module.exports = (app, passport) => {
     failureFlash : true // allow flash messages
   }));
   
-  app.post('/signin', passport.authenticate('guid-signin', {
-    successRedirect : '/questions',  // redirect to the secure profile section
-    failureRedirect : '/signin', // redirect back to the signup page if there is an error
+  app.get('/guid_signin', (req, res, next) => {
+    res.render('guid_signin');
+  });
+
+  app.post('/guid_signin', passport.authenticate('guid-signin', {
+    successRedirect : '/tours',  // redirect to the secure profile section
+    failureRedirect : '/guid_signin', // redirect back to the signup page if there is an error
     failureFlash : true // allow flash messages
   }));
 

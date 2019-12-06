@@ -8,7 +8,7 @@ function needAuth(req, res, next) {
     next();
   } else {
     req.flash('danger', 'Please signin first.');
-    res.redirect('/signin');
+    res.redirect('/guid_signin');
   }
 }
 
@@ -52,7 +52,7 @@ router.get('/new', (req, res, next) => {
 });
 
 router.get('/:id/edit', needAuth, catchErrors(async (req, res, next) => {
-  const guid = await User.findById(req.params.id);
+  const guid = await Guid.findById(req.params.id);
   res.render('guids/edit', {guid: guid});
 }));
 
@@ -69,7 +69,7 @@ router.put('/:id', needAuth, catchErrors(async (req, res, next) => {
     return res.redirect('back');
   }
 
-  if (!await user.validatePassword(req.body.current_password)) {
+  if (!await guid.validatePassword(req.body.current_password)) {
     req.flash('danger', 'Current password invalid.');
     return res.redirect('back');
   }
@@ -77,7 +77,7 @@ router.put('/:id', needAuth, catchErrors(async (req, res, next) => {
   guid.name = req.body.name;
   guid.email = req.body.email;
   if (req.body.password) {
-    guid.password = await user.generateHash(req.body.password);
+    guid.password = await guid.generateHash(req.body.password);
   }
   await guid.save();
   req.flash('success', 'Updated successfully.');
@@ -111,7 +111,7 @@ router.post('/', catchErrors(async (req, res, next) => {
     name: req.body.name,
     email: req.body.email,
   });
-  guid.password = await user.generateHash(req.body.password);
+  guid.password = await guid.generateHash(req.body.password);
   await guid.save();
   req.flash('success', 'Registered successfully. Please sign in.');
   res.redirect('/');

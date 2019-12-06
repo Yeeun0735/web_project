@@ -3,8 +3,8 @@ extends layout
 block content
   .container
     .clearfix
-      form.form-signin(action='/signin', method='POST')
-        h3.form-signin-heading Signin
+      form.form-signin(action='/guid_signin', method='POST')
+        h3.form-signin-heading Guid Signin
         label.sr-only(for='email') Email address
         input(
           type='email', id='email', name='email', class='form-control', 
@@ -23,6 +23,6 @@ block content
           | Signin with Facebook
 
         div.sub 
-          a(href='/users/new') Signup  |
-          a(href='/guid_signin')   Guid Signin
+          a(href='/guids/new') Signup  |
+          a(href='/signin')   User Signin
           

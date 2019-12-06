@@ -23,6 +23,6 @@ schema.methods.validatePassword = function(password) {
   return bcrypt.compare(password, this.password); // return Promise
 };
 
-var User = mongoose.model('User', schema);
+var Admin = mongoose.model('Admin', schema);
 
 module.exports = User;

@@ -13,7 +13,7 @@ module.exports = io => {
       next();
     } else {
       req.flash('danger', 'Please signin first.');
-      res.redirect('/signin');
+      res.redirect('/guid_signin');
     }
   }
 

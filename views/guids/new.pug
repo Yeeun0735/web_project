@@ -16,6 +16,9 @@ block content
       .form-group
         label(for='password_confirmation') Password Confirmation
         input.form-control(type='password', id='password_confirmation', name='password_confirmation', placeholder='Password')
+      .form-group
+        label(for='level') 
+        input.form-control(type='hidden', id='level', name='level', value=1)
       a.btn.btn-outline-secondary(href='/guids') List
       | 
       button.btn.btn-primary(type='submit') Register 
