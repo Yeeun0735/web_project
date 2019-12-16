@@ -5,6 +5,9 @@
   "scripts": {
     "start": "nodemon ./bin/www"
   },
+  "engines":{
+    "node": "8.6.0"
+  },
   "dependencies": {
     "async-error-catcher": "^1.2.0",
     "bcrypt": "^3.0.6",
