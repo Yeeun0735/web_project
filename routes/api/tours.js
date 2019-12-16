@@ -29,7 +29,7 @@ router.post('', catchErrors(async (req, res, next) => {
     title: req.body.title,
     name: req.body.name,
     price: req.body.price,
-    author: req.user._id,
+    author: req.guid._id,
     content: req.body.content,
     tags: req.body.tags.map(e => e.trim()),
   });
