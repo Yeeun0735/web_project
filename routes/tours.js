@@ -1,5 +1,5 @@
 const express = require('express');
-const Question = require('../models/question');
+const Tour = require('../models/tour');
 const Answer = require('../models/answer'); 
 const catchErrors = require('../lib/async-error');
 
@@ -13,11 +13,11 @@ module.exports = io => {
       next();
     } else {
       req.flash('danger', 'Please signin first.');
-      res.redirect('/signin');
+      res.redirect('/guid_signin');
     }
   }
 
-  /* GET questions listing. */
+  /* GET tour listing. */
   router.get('/', catchErrors(async (req, res, next) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
@@ -30,91 +30,95 @@ module.exports = io => {
         {content: {'$regex': term, '$options': 'i'}}
       ]};
     }
-    const questions = await Question.paginate(query, {
+    const tours = await Tour.paginate(query, {
       sort: {createdAt: -1}, 
       populate: 'author', 
       page: page, limit: limit
     });
-    res.render('questions/index', {questions: questions, term: term, query: req.query});
+    res.render('tours/index', {tours: tours, term: term, query: req.query});
   }));
 
   router.get('/new', needAuth, (req, res, next) => {
-    res.render('questions/new', {question: {}});
+    res.render('tours/new', {tour: {}});
   });
 
   router.get('/:id/edit', needAuth, catchErrors(async (req, res, next) => {
-    const question = await Question.findById(req.params.id);
-    res.render('questions/edit', {question: question});
+    const tour = await Tour.findById(req.params.id);
+    res.render('tours/edit', {tour: tour});
   }));
 
   router.get('/:id', catchErrors(async (req, res, next) => {
-    const question = await Question.findById(req.params.id).populate('author');
-    const answers = await Answer.find({question: question.id}).populate('author');
-    question.numReads++;    // TODO: 동일한 사람이 본 경우에 Read가 증가하지 않도록???
+    const tour = await Tour.findById(req.params.id).populate('author');
+    const answers = await Answer.find({tour: tour.id}).populate('author');
+    tour.numReads++;    // TODO: 동일한 사람이 본 경우에 Read가 증가하지 않도록???
 
-    await question.save();
-    res.render('questions/show', {question: question, answers: answers});
+    await tour.save();
+    res.render('tours/show', {tour: tour, answers: answers});
   }));
 
   router.put('/:id', catchErrors(async (req, res, next) => {
-    const question = await Question.findById(req.params.id);
+    const tour = await Tour.findById(req.params.id);
 
-    if (!question) {
-      req.flash('danger', 'Not exist question');
+    if (!tour) {
+      req.flash('danger', 'Not exist tour');
       return res.redirect('back');
     }
-    question.title = req.body.title;
-    question.content = req.body.content;
-    question.tags = req.body.tags.split(" ").map(e => e.trim());
+    tour.title = req.body.title;
+    tour.name = req.body.name;
+    tour.price = req.body.price;
+    tour.content = req.body.content;
+    tour.tags = req.body.tags.split(" ").map(e => e.trim());
 
-    await question.save();
+    await tour.save();
     req.flash('success', 'Successfully updated');
-    res.redirect('/questions');
+    res.redirect('/tours');
   }));
 
   router.delete('/:id', needAuth, catchErrors(async (req, res, next) => {
-    await Question.findOneAndRemove({_id: req.params.id});
+    await Tour.findOneAndRemove({_id: req.params.id});
     req.flash('success', 'Successfully deleted');
-    res.redirect('/questions');
+    res.redirect('/tours');
   }));
 
   router.post('/', needAuth, catchErrors(async (req, res, next) => {
     const user = req.user;
-    var question = new Question({
+    var tour = new Tour({
       title: req.body.title,
       author: user._id,
+      name : req.body.name,
+      price : req.body.price,
       content: req.body.content,
       tags: req.body.tags.split(" ").map(e => e.trim()),
     });
-    await question.save();
+    await tour.save();
     req.flash('success', 'Successfully posted');
-    res.redirect('/questions');
+    res.redirect('/tours');
   }));
 
   router.post('/:id/answers', needAuth, catchErrors(async (req, res, next) => {
     const user = req.user;
-    const question = await Question.findById(req.params.id);
+    const tour = await Tour.findById(req.params.id);
 
-    if (!question) {
-      req.flash('danger', 'Not exist question');
+    if (!tour) {
+      req.flash('danger', 'Not exist tour');
       return res.redirect('back');
     }
 
     var answer = new Answer({
       author: user._id,
-      question: question._id,
+      tour: tour._id,
       content: req.body.content
     });
     await answer.save();
-    question.numAnswers++;
-    await question.save();
+    tour.numAnswers++;
+    await tour.save();
 
-    const url = `/questions/${question._id}#${answer._id}`;
-    io.to(question.author.toString())
-      .emit('answered', {url: url, question: question});
-    console.log('SOCKET EMIT', question.author.toString(), 'answered', {url: url, question: question})
+    const url = `/tours/${tour._id}#${answer._id}`;
+    io.to(tour.author.toString())
+      .emit('answered', {url: url, tour: tour});
+    console.log('SOCKET EMIT', tour.author.toString(), 'answered', {url: url, tour: tour})
     req.flash('success', 'Successfully answered');
-    res.redirect(`/questions/${req.params.id}`);
+    res.redirect(`/tours/${req.params.id}`);
   }));
 
   return router;

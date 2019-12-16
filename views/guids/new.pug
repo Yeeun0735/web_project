@@ -2,8 +2,8 @@ extends ../layout
 
 block content
   .container
-    h1.main-title Register
-    form(action='/users', method='POST')
+    h1.main-title Guid Register
+    form(action='/guids', method='POST')
       .form-group
         label(for='name') Name
         input.form-control(type='text', id='name', name='name', placeholder='Your name')
@@ -16,14 +16,9 @@ block content
       .form-group
         label(for='password_confirmation') Password Confirmation
         input.form-control(type='password', id='password_confirmation', name='password_confirmation', placeholder='Password')
-      
       .form-group
         label(for='level') 
-        input.form-control(type='hidden', id='level', name='level', value = 0)
-
-      a.btn.btn-outline-secondary(href='/users') List 
-      |
-      |
-      a.btn.btn-outline-secondary(href='/guids/new') Guid Singup
+        input.form-control(type='hidden', id='level', name='level', value=1)
+      a.btn.btn-outline-secondary(href='/guids') List
       | 
       button.btn.btn-primary(type='submit') Register 

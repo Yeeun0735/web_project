@@ -3,10 +3,13 @@ const mongoosePaginate = require('mongoose-paginate');
 const Schema = mongoose.Schema;
 
 var schema = new Schema({
-  author: { type: Schema.Types.ObjectId, ref: 'User' },
+  author: { type: Schema.Types.ObjectId, ref: 'Guid' },
   title: {type: String, trim: true, required: true},
-  content: {type: String, trim: true, required: true},
+  name: {type: String, trim: true, required: true},
+  price: {type: String, trim: true, required: true},
+  content: {type: String,  trim: true, required: true},
   tags: [String],
+  
   numLikes: {type: Number, default: 0},
   numAnswers: {type: Number, default: 0},
   numReads: {type: Number, default: 0},
@@ -16,6 +19,6 @@ var schema = new Schema({
   toObject: {virtuals: true}
 });
 schema.plugin(mongoosePaginate);
-var Question = mongoose.model('Question', schema);
+var Tour = mongoose.model('Tour', schema);
 
-module.exports = Question;
+module.exports = Tour;

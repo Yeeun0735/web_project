@@ -1,19 +1,17 @@
 const mongoose = require('mongoose');
-const mongoosePaginate = require('mongoose-paginate');
 const Schema = mongoose.Schema;
 
 var schema = new Schema({
-  author: { type: Schema.Types.ObjectId, ref: 'User' },
+  author: { type: Schema.Types.ObjectId, ref: 'User'},
+  guid: { type: Schema.Types.ObjectId, ref: 'Guid' },
   question: { type: Schema.Types.ObjectId, ref: 'Question' },
   tour: { type: Schema.Types.ObjectId, ref: 'Tour' },
-  content: {type: String, trim: true, required: true},
-  numLikes: {type: Number, default: 0},
   createdAt: {type: Date, default: Date.now}
 }, {
   toJSON: { virtuals: true},
   toObject: {virtuals: true}
 });
-schema.plugin(mongoosePaginate);
-var Answer = mongoose.model('Answer', schema);
+var LikeLog = mongoose.model('LikeLog', schema);
 
-module.exports = Answer;
+module.exports = LikeLog;
+

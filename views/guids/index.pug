@@ -1,0 +1,27 @@
+extends ../layout
+
+block content
+  .container
+    h1.main-title Guid
+    
+    table.table.table-hover
+      thead
+        tr
+          th Name
+          th Email
+          th Created At
+          th
+      tbody
+        each guid in guids
+          tr
+            td
+              a(href=`/guids/${guid._id}`)= guid.name
+            td= guid.email
+            td= moment(guid.createdAt).format('YYYY-MM-DD HH:mm:ss')
+            td
+              a.btn.btn-sm.btn-outline-secondary(href=`/guids/${guid._id}/edit`) 
+                | #[i.fa.fa-pencil] Edit
+              | 
+              a.btn.btn-sm.need-confirm-btn.btn-outline-danger(href=`/guids/${guid._id}?_method=DELETE`)
+                | #[i.fa.fa-trash] Delete
+    a.btn.btn-primary(href='/guids/new') #[i.fa.fa-plus] Register a new user
